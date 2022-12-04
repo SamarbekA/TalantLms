@@ -13,34 +13,45 @@ import java.util.List;
 @Repository
 @Transactional
 public class CourseRepositoryImpl implements CourseRepository {
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<Course> getAllCourses() {
-        return entityManager.createQuery("from Course", Course.class).getResultList();
+    public List<Course> getAllCourses(Long id) {
+        return  entityManager.createQuery("select c from Course c where c.company.id = :id",Course.class).setParameter("id",id).getResultList();
     }
 
     @Override
-    public void addCourse(Course course) {
-        entityManager.persist(course);
-
-    }
-
-    @Override
-    public Company getCourseById(Long id) {
-        return entityManager.find(Company.class,id);
-    }
-
-    @Override
-    public void updateCourse(Course course) {
-        entityManager.merge(course);
+    public void addCourse(Course course, Long id) {
+        Company company = entityManager.find(Company.class,id);
+        company.addCourse(course);
+        course.setCompany(company);
+        entityManager.merge(company);
 
     }
 
     @Override
-    public void deleteCourse(Course course) {
-        entityManager.remove(entityManager.contains(course)? course: entityManager.merge(course));
+    public Course getCourseById(Long id) {
+        return entityManager.find(Course.class,id);
+    }
+
+    @Override
+    public void updateCourse(Course course, Long id) {
+        Course course1 = getCourseById(id);
+        course1.setCourseName(course.getCourseName());
+        course1.setDescription(course.getDescription());
+        course1.setDuration(course.getDuration());
+        entityManager.merge(course1);
+
+
+    }
+
+    @Override
+    public void deleteCourse(Long id) {
+        Course course = entityManager.find(Course.class,id);
+        course.setCompany(null);
+        entityManager.remove(course);
 
     }
 }

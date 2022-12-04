@@ -17,30 +17,29 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllCourses() {
-        return courseRepository.getAllCourses();
+    public List<Course> getAllCourses(Long id) {
+        return courseRepository.getAllCourses(id);
     }
 
     @Override
-    public void addCourse(Course course) {
-        courseRepository.addCourse(course);
+    public void addCourse(Course course, Long id) {
+        courseRepository.addCourse(course, id);
 
     }
 
     @Override
-    public Company getCourseById(Long id) {
+    public Course getCourseById(Long id) {
         return courseRepository.getCourseById(id);
     }
 
     @Override
-    public void updateCourse(Course course) {
-        courseRepository.updateCourse(course);
-
+    public void updateCourse(Course course, Long id) {
+        courseRepository.updateCourse(course, id);
     }
 
     @Override
-    public void deleteCourse(Course course) {
-        courseRepository.deleteCourse(course);
+    public void deleteCourse(Long id) {
+        courseRepository.deleteCourse(id);
 
     }
 }
